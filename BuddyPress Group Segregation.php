@@ -4,7 +4,7 @@
  * Plugin URI: https://salle-humide.be
  * Description: Plugin permettant de restreindre les contenus et utilisateurs visibles dans BuddyPress en fonction des groupes (rôles).
  * Version: 0.3
- * Author: Franck Masson
+ * Author: dracou
  * Text Domain: bp-group-segregation
  * Domain Path: /languages
  */
