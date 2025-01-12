@@ -1,0 +1,47 @@
+Je veux créer un plugin WordPress pour BuddyPress.
+L'éditeur du plugin s'appelle "Franck Masson".
+
+Contexte:
+Wordpress permet de créer des utilisateurs, et de définir leur rôle.
+Je vais utiliser ces rôles pour créer des "groupes d'appartenance", c'est à dire que les utilisateurs vont pouvoir être reconnus de par un point commun qui est ce groupe (d'appartenance), le rôle.
+Je vais créer des rôles sur mesure qui seront au nom du groupe en question.
+Exemple: rôle "garçons" qui représentera un groupe avec tous les garçons.
+
+Une fois les utilisateurs classifiables par groupes, je veux agir sur ce qu'il se passe dans BuddyPress:
+
+1) Toutes les activités du site: ce sont les événements qui concernent des utilisateurs (des auteurs). ils effectuent des "actions" qui sont parfois liés à une autre activité (une réponse par exemple). On peut appeler ça aussi le "contenu".
+2) Tous les utilisateurs / auteurs: ce sont les utilisateurs qui sont dans WordPress et que BuddyPress utilise pour fonctionner. En d'autres mots: BuddyPRess utilise la database users de WordPress pour fonctionner. 
+
+Afin de présenter ce que peut faire le plugin, et le paramétrer, je veux qu'il y ait une page dédiée de "Réglages" qui soit créée sous "Réglages" dans le menu de gauche de Wordpress (la page /wp-admin/options-general.php).
+Cette page de réglages propre au plugin doit évidemment être accessible par lien hypertexte depuis la page de plugins (/wp-admin/plugins.php) à côté du lien "Désactiver".
+
+La page dédiée de Réglages du plugin doit présenter les diferses fonctionnalités avec un titre clair expliquant la fonctionnalité et un bouton de type "on - off" qui activera la fonctionnalité (position "on") et qui la désactivera (position "off") sans devoir sauver la configuration de la page dédiée.
+
+Fonctionnalité 1: "Ségrégation de contenu des groupes".
+En position ON: tout utilisateur ne voit que le contenu (activité du site) publié par un membre du groupe (rôle) dont il fait lui-même partie. 
+En position OFF: tout utilisateur peut voir tout contenu publié par tout utilisateur. En d'autres mots, les contenus, messages, activités, réponses etc. deviennent entièrement publics. 
+Explication: l'idée de cette fonctionnalité est de garantir une protection des contenus et les rendre accessibles que par un nombre limité et défini d'utilisateurs.
+
+Fonctionnalité 2: "Ségrégation des utilisateurs".
+En position ON: les utilisateurs membres d'un groupe (ayant donc un rôle précis) ne peuvent voir la liste des "membres" (un membre est un utilisateur ayant un rôle spécifique, un "groupe d'appartenance") ne peuvent voir ou lister que les utilisateurs membres du même groupe que le leur.
+Explication: l'utilisateur 1 est membre du groupe "alpha", et ne pourra voir et être vu que des utilisateurs membres du groupe "alplha" également.
+
+
+Important à savoir:
+1) Les utilisateurs qui ont un rôle administrateur ne sont pas concernés par ces fonctionnalités.
+2) L'accès public est empêché pour tout contenu BuddyPress par le plugin "Buddypress Members Only" qui rend accessible tout ce qui se trouve dans BuddyPress uniquement aux utilisateurs enregistrés. Comme les comptes utilisateurs sont créés manuellement, le contenu BuddyPress est protégé du monde extérieur. Pour le monde intérieur (utilisateurs identifiés ayant accès à BuddyPress), le but du présent plugin s'applique.
+3) Pour identifier les contenus à afficher seulement (en cas de ségrécation activée), il faudra que tu te renseignes dans la documentation du plugin BuddyPress au sujet de comment est identifié ou taggué (je ne sais pas) une activité, un message, une réponse, ...
+4) chaque rôle correspond à un seul groupe.
+5) essaie de ne pas utiliser de technique trop propre à une version spécifique de wordpress ou buddypress pour garantir la compatibilité du code à l'avenir
+6) Les activités sont enregistrées sous forme d'url de type "/activites-du-site/p/49/" dans la table qui finit par bp_activity. Dans la table tu as la colonne "component" qui a soit "groups", soit "members" soit "activity". La colonne "Id" de la même table renvoie au chiffre de l'url de type "/activites-du-site/p/49/" et la colonne user_id de cette table présente un chiffre qui sera l'identifiant chiffré unique de chaque utilisateur qui est identique à la valeur de la colonne "ID" de la table wp_users. C'est le inner join. 
+7) Format attendu pour le paramètre "on-off" peut utiliser la façon la plus simple et pérenne / "future proof" au niveau du code et des updates futures.
+8) Le plugin ne doit pas créer de rôles, c'est moi qui les crée manuellement dans wordpress
+9) Un utilisateur ne changera jamais de groupe. 
+10) Je n'ai pas besoin d'audit log.
+11) le plugin ne doit pas contenir de hooks ou des filtres supplémentaires pour le futur.
+12) Je n'ai pas de préférence de design pour la page de réglages. 
+13) pas d'environnement de test disponible
+14) le plugin doit être prêt pour la traduction (fichier .pot)
+15) je préfère un grand fichier principal bien documenté
+
+Ecris le code.
