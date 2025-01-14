@@ -1,5 +1,5 @@
 Je veux créer un plugin WordPress pour BuddyPress.
-L'éditeur du plugin s'appelle "Franck Masson".
+L'éditeur du plugin s'appelle "dracou".
 
 Contexte:
 Wordpress permet de créer des utilisateurs, et de définir leur rôle.
@@ -23,7 +23,7 @@ En position OFF: tout utilisateur peut voir tout contenu publié par tout utilis
 Explication: l'idée de cette fonctionnalité est de garantir une protection des contenus et les rendre accessibles que par un nombre limité et défini d'utilisateurs.
 
 Fonctionnalité 2: "Ségrégation des utilisateurs".
-En position ON: les utilisateurs membres d'un groupe (ayant donc un rôle précis) ne peuvent voir la liste des "membres" (un membre est un utilisateur ayant un rôle spécifique, un "groupe d'appartenance") ne peuvent voir ou lister que les utilisateurs membres du même groupe que le leur.
+En position ON: les utilisateurs membres d'un groupe (ayant donc un rôle précis) ne peuvent voir la liste des "membres" (un membre est un utilisateur ayant un rôle spécifique, un "groupe d'appartenance") ou ne lister que les utilisateurs membres du même groupe que le leur.
 Explication: l'utilisateur 1 est membre du groupe "alpha", et ne pourra voir et être vu que des utilisateurs membres du groupe "alplha" également.
 
 
@@ -43,5 +43,11 @@ Important à savoir:
 13) pas d'environnement de test disponible
 14) le plugin doit être prêt pour la traduction (fichier .pot)
 15) je préfère un grand fichier principal bien documenté
+16) il faut que le nombre affiché et calculé du nombre total de membre soit non pas le nombre total d'utilisateurs BuddyPress existants, mais bien le nombre total d'utilisateurs BuddyPress membres du même groupe que celui de l'utilisateur concerné. Cela s'édite à deux endroits: sur  <div id="member-dir-count-top" class="pag-count"></div> ainsi que sur <li id="members-all" class="selected">
 
-Ecris le code.
+En fonction du code ci-après que tu as déjà généré pour moi précédement, réécris tout le code et édite le pour qu'il inclue les paramètres supplémentaires:
+pour la fonctionnalité 1 et la fonctionnalité 2, si elles sont activées, il faut que le nombre affiché et calculé du nombre total de membre soit non pas le nombre total d'utilisateurs BuddyPress existants, mais bien le nombre total d'utilisateurs BuddyPress membres du même groupe que celui de l'utilisateur concerné.
+
+Code:
+
+Ancien code.

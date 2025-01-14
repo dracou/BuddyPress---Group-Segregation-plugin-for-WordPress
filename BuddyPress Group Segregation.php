@@ -3,8 +3,8 @@
  * Plugin Name: BuddyPress Group Segregation
  * Plugin URI: https://salle-humide.be
  * Description: Plugin permettant de restreindre les contenus et utilisateurs visibles dans BuddyPress en fonction des groupes (rôles).
- * Version: 0.3
- * Author: dracou
+ * Version: 0.58 bêta
+ * Author: Franck Masson
  * Text Domain: bp-group-segregation
  * Domain Path: /languages
  */
@@ -23,6 +23,11 @@ class BP_Group_Segregation {
         add_action('bp_activity_get', [$this, 'filter_activity'], 10, 2);
         add_action('bp_core_get_users', [$this, 'filter_users'], 10, 2);
         add_filter('plugin_action_links_' . plugin_basename(__FILE__), [$this, 'add_settings_link']);
+        add_filter('bp_directory_members_count', [$this, 'filter_member_count']);
+        add_filter('bp_get_total_member_count', [$this, 'filter_member_count']);
+        add_filter('bp_get_members_pagination_count', [$this, 'filter_member_pagination_count']);
+        add_filter('bp_after_has_members_parse_args', [$this, 'filter_members_query_args']);
+        add_filter('bp_members_directory_member_count', [$this, 'update_member_count_display']);
         load_plugin_textdomain('bp-group-segregation', false, dirname(plugin_basename(__FILE__)) . '/languages');
     }
 
@@ -126,6 +131,91 @@ class BP_Group_Segregation {
         return $users;
     }
 
+    public function filter_member_count($count) {
+        if (!get_option('bp_group_segregation_users')) {
+            return $count;
+        }
+
+        $current_user_id = get_current_user_id();
+        $current_user_role = $this->get_user_role($current_user_id);
+
+        if (!$current_user_role || current_user_can('administrator')) {
+            return $count;
+        }
+
+        $users_query = new WP_User_Query([
+            'role' => $current_user_role,
+            'count_total' => true,
+            'fields' => 'ID',
+        ]);
+
+        return $users_query->get_total();
+    }
+
+    public function filter_member_pagination_count($pagination_count) {
+        if (!get_option('bp_group_segregation_users')) {
+            return $pagination_count;
+        }
+
+        $current_user_id = get_current_user_id();
+        $current_user_role = $this->get_user_role($current_user_id);
+
+        if (!$current_user_role || current_user_can('administrator')) {
+            return $pagination_count;
+        }
+
+        $users_query = new WP_User_Query([
+            'role' => $current_user_role,
+            'fields' => 'ID',
+        ]);
+
+        $total_count = $users_query->get_total();
+        $current_count = count($users_query->get_results());
+
+        return sprintf(
+            __('Viewing %1$s of %2$s members', 'bp-group-segregation'),
+            $current_count,
+            $total_count
+        );
+    }
+
+    public function filter_members_query_args($args) {
+        if (!get_option('bp_group_segregation_users')) {
+            return $args;
+        }
+
+        $current_user_id = get_current_user_id();
+        $current_user_role = $this->get_user_role($current_user_id);
+
+        if (!$current_user_role || current_user_can('administrator')) {
+            return $args;
+        }
+
+        $args['role'] = $current_user_role;
+        return $args;
+    }
+
+    public function update_member_count_display($content) {
+        if (!get_option('bp_group_segregation_users')) {
+            return $content;
+        }
+
+        $current_user_id = get_current_user_id();
+        $current_user_role = $this->get_user_role($current_user_id);
+
+        if (!$current_user_role || current_user_can('administrator')) {
+            return $content;
+        }
+
+        $users_query = new WP_User_Query([
+            'role' => $current_user_role,
+            'fields' => 'ID',
+        ]);
+
+        $total_count = $users_query->get_total();
+        return sprintf(__('Viewing %d members', 'bp-group-segregation'), $total_count);
+    }
+
     private function get_user_role($user_id) {
         $user = get_userdata($user_id);
         return $user ? $user->roles[0] : null;
@@ -139,5 +229,4 @@ class BP_Group_Segregation {
 }
 
 BP_Group_Segregation::get_instance();
-
 
